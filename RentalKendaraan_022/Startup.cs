@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,6 +44,21 @@ namespace RentalKendaraan_022
 
             services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultUI()
                 .AddEntityFrameworkStores<RentalKendaraanContext>().AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("readOnlyPolicy",
+                    builder => builder.RequireRole("Admin", "Manager", "Kasir"));
+                options.AddPolicy("writePolicy",
+                    builder => builder.RequireRole("Admin", "Kasir"));
+                options.AddPolicy("editPolicy",
+                    builder => builder.RequireRole("Admin", "Kasir"));
+                options.AddPolicy("deletePolicy",
+                    builder => builder.RequireRole("Admin", "Kasir"));
+            });
+
+            services.AddScoped<Peminjaman>();
+            services.AddScoped<Pengembalian>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

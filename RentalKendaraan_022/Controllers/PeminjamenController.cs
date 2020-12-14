@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace RentalKendaraan_022.Controllers
         }
 
         // GET: Peminjamen
+        [Authorize(Policy = "readOnlyPolicy")]
         public async Task<IActionResult> Index(string ktsd, string searchString, string sortOrder, string currentFilter, int? pageNumber)
         {
             //buat list menyimpan ketersediaan
@@ -109,6 +111,7 @@ namespace RentalKendaraan_022.Controllers
         }
 
         // GET: Peminjamen/Create
+        [Authorize(Policy = "writePolicy")]
         public IActionResult Create()
         {
             ViewData["NamaCustomer"] = new SelectList(_context.Customer, "IdCustomer", "NamaCustomer");
@@ -137,6 +140,7 @@ namespace RentalKendaraan_022.Controllers
         }
 
         // GET: Peminjamen/Edit/5
+        [Authorize(Policy = "editPolicy")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -194,6 +198,7 @@ namespace RentalKendaraan_022.Controllers
         }
 
         // GET: Peminjamen/Delete/5
+        [Authorize(Policy = "deletePolicy")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
